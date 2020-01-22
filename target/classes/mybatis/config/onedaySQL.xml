@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 네임스페이스 설정 조심하기 이거 어떻게 정해야되더라??? -->
+<mapper namespace="oneday">
+	<!-- 원데이 클래스 강좌 관리 -->
+	<resultMap type="onedayModel" id="onedayRes">
+		<result property="oneday_no" column="oneday_no" />
+		<result property="id_admin" column="id_admin" />
+		<result property="name" column="name" />
+		<result property="price" column="price" />
+		<result property="day" column="day" />
+		<result property="reg_date" column="reg_date" />
+		<result property="main_save" column="main_save" />
+		<result property="content" column="content" />
+		<result property="maxnum" column="maxnum" />
+	</resultMap>
+	<resultMap type="userOnedayModel" id="userOnedayRes">
+		<result property="order_no" column="order_no" />
+		<result property="id" column="id" />
+		<result property="goods_no" column="goods_no" />
+		<result property="goods_qty" column="goods_qty" />
+		<result property="goods_price" column="goods_price" />
+		<result property="name" column="name" />
+		<result property="phone" column="phone" />
+		<result property="reg_date" column="reg_date" />
+		<result property="status_no" column="status_no" />
+	</resultMap>
+
+	<!-- ADMIN -->
+
+	<!-- 강좌 등록 -->
+	<insert id="adOnedayWrite" parameterType="onedayModel">
+		INSERT INTO
+		ONEDAY(ONEDAY_NO,ID_ADMIN,NAME,PRICE,DAY,REG_DATE,MAIN_SAVE,CONTENT,MAXNUM)
+		VALUES(#{oneday_no},#{id_admin},#{name},#{price},#{day},SYSDATE,#{main_save},#{content},#{maxnum})
+	</insert>
+
+	<!-- 강좌 정보 수정 -->
+	<update id="adOnedayModify" parameterType="String">
+		UPDATE ONEDAY SET
+		NAME=#{name},PRICE=#{price},DAY=#{day},MAIN_SAVE=#{main_save},CONTENT=#{content},MAXNUM=#{maxnum}
+		WHERE ONEDAY_NO = #{oneday_no}
+	</update>
+
+	<!-- 강좌 삭제 -->
+	<delete id="adOnedayDelete" parameterType="String">
+		DELETE FROM ONEDAY
+		WHERE ONEDAY_NO =#{oneday_no}
+	</delete>
+
+	<!-- 강좌 리스트 불러오기 -->
+	<select id="adOnedayList" resultMap="onedayRes">
+		SELECT * FROM ONEDAY ORDER
+		BY REG_DATE DESC
+	</select>
+
+	<!-- 강좌 상세 정보 보기 -->
+	<select id="adOnedayView" resultMap="onedayRes">
+		SELECT * FROM ONEDAY WHERE
+		oneday_no = #{oneday_no}
+	</select>
+
+	<!-- 강좌 번호 생성 -->
+	<select id="getOneday_NO_SEQ" resultType="int">
+		SELECT
+		common_no_seq.nextval FROM dual
+	</select>
+
+	<!-- USER -->
+
+	<!-- 회원 강좌 주문 -->
+	<insert id="orderOneday" parameterType="userOnedayModel">
+		INSERT INTO ORDERS_ONE
+		(ORDER_NO,ONEDAY_NO, ID,GOODS_NO,GOODS_QTY,GOODS_PRICE,NAME,PHONE,REG_DATE,STATUS_NO)
+		VALUES(#{order_no},#{oneday_no}, #{id},#{goods_no},#{goods_qty},#{goods_price},#{name},#{phone},SYSDATE,#{status_no})
+	</insert>
+	<!-- 예약 가능 인원수 변경 -->
+	<update id="updateMaxnum" parameterType="userOnedayModel">
+		UPDATE ONEDAY SET MAXNUM=#{testMaxnum} WHERE ONEDAY_NO=#{goods_no}
+	</update>
+	<!-- 장바구니 주문 번호 생성 -->
+	<select id="getOrder_NO_SEQ" resultType="int">
+		SELECT
+		order_no_seq.nextval FROM dual</select>
+
+</mapper>

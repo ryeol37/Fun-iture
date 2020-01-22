@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="notice">
+
+	<resultMap type="noticeModel" id="noticeModel">
+		<result property="no" column = "no"/>
+		<result property="id_admin" column="id_admin" />
+		<result property="subject" column="subject" />
+		<result property="content" column="content" />
+		<result property="reg_date" column="reg_date" />
+		<result property="status" column="status" />
+	</resultMap>
+	
+	<!-- 관리자 글 목록 -->
+	<select id="adnoticeList" resultMap="noticeModel">
+		SELECT * FROM NOTICE ORDER BY no DESC
+	</select>
+	
+	<insert id="insert" parameterType="noticeModel">
+		INSERT INTO NOTICE(no, id_admin, subject, content, reg_date, status) 
+		VALUES (NOTICE_NO_SEQ.NEXTVAL, #{id_admin}, #{subject}, #{content},SYSDATE,'Y')
+	</insert>
+	
+	<select id="view" resultMap="noticeModel">
+		SELECT * FROM NOTICE WHERE no = #{no} 
+	</select>
+	
+	<update id="modify" parameterType="noticeModel">
+		UPDATE NOTICE SET subject = #{subject}, content = #{content} WHERE no =  #{no}
+	</update>
+	
+	<update id="delete" parameterType="noticeModel">
+		UPDATE NOTICE SET status ='N' WHERE no =#{no}
+	</update>
+	
+	<!-- 회원 글 목록 -->
+	<select id="noticeList" resultMap="noticeModel">
+		SELECT * FROM NOTICE WHERE status='Y' ORDER BY no DESC
+	</select>
+	
+	<!-- 제목으로 검색 -->
+	<select id="searchSub" parameterType="String" resultMap="noticeModel">
+		SELECT * FROM NOTICE WHERE subject like #{search} and status='Y' order by no DESC
+	</select>
+	
+	<!-- 내용으로 검색 -->
+	<select id="searchCon" parameterType="String" resultMap="noticeModel">
+		SELECT * FROM NOTICE WHERE content like #{search}  and status='Y' order by no DESC
+	</select>
+	
+</mapper>
+	

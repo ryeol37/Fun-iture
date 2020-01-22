@@ -1,0 +1,25 @@
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mailing">
+
+	<resultMap type="mailingModel" id="mailingModel">
+		<result property="no" column = "no"/>
+		<result property="email" column="email" />
+	</resultMap>
+	
+	<!-- 관리자 글 목록 -->
+	<select id="contactList" resultMap="mailingModel">
+		SELECT * FROM MAILING ORDER BY no DESC
+	</select>
+	
+	<insert id="insert" parameterType="mailingModel">
+		INSERT INTO MAILING(no, email) 
+		VALUES (MAILING_NO_SEQ.NEXTVAL, #{email})
+	</insert>
+	
+	<!-- <delete id="delete" parameterType="int">
+		DELETE MAILING WHERE NO = #{NO}
+	</delete> -->
+</mapper>

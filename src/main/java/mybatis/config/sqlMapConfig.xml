@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration 
+PUBLIC " - //mybatis.org//DTD Config 3.0//EN"
+	   " http://mybatis.org/dtd/mybatis-3-config.dtd">
+	   
+	   
+<configuration>
+
+	<!-- mybatis 기본 세팅 -->
+	<settings>
+		<setting name="cacheEnabled"              value="true"/>  
+        <setting name="lazyLoadingEnabled"        value="false"/>  
+        <setting name="multipleResultSetsEnabled" value="true"/>  
+        <setting name="useColumnLabel"            value="true"/>  
+        <setting name="useGeneratedKeys"          value="false"/>  
+        <setting name="defaultExecutorType"       value="SIMPLE"/>  
+        <setting name="defaultStatementTimeout"   value="25000"/>  
+	</settings>
+	
+	<!-- ModelMapping -->
+	<typeAliases>
+	
+	<!-- goods -->
+	 <typeAlias type="com.my.goods.goodsModel" alias="goodsModel" /> 
+
+	<!-- Member -->
+	<typeAlias type="com.my.member.MemberModel" alias="memberModel"/>
+
+	<!-- Basket -->
+     <typeAlias type="com.my.basket.BasketModel" alias="basketModel" />
+      
+   <!-- Order-->
+     <typeAlias type="com.my.order.OrderModel" alias="orderModel" /> 
+
+<!-- Oneday -->
+		<typeAlias alias="onedayModel" type="com.my.oneday.AdOnedayModel" />
+		<typeAlias alias="userOnedayModel" type="com.my.oneday.UserOnedayModel" />
+		
+		<!-- Custom & Custom_Board -->
+		<typeAlias type="com.my.custom.CustomModel" alias="customModel"/>
+		<typeAlias type="com.my.custom.CustomComModel" alias="customComModel"/>
+		<typeAlias type="com.my.customB.CuboardModel" alias="cuboardModel"/>
+		<typeAlias type="com.my.customB.CuboardComModel" alias="cuboardComModel"/>
+		
+		<!-- likes -->
+	<typeAlias type="com.my.goods.likesModel" alias="likesModel"/>
+	<!-- goodsCom -->
+	<typeAlias type="com.my.goods.goodsComModel" alias="goodsComModel"/>
+	
+		<!-- Orders_Cus -->
+		<typeAlias type="com.my.customB.OrderCusModel" alias="orderCusModel"/>
+		
+				<typeAlias type="com.my.notice.NoticeModel" alias="noticeModel" />
+		<typeAlias type="com.my.qna.QnaModel" alias="qnaModel"/>
+		<typeAlias type="com.my.qna.QnaComModel" alias="qnacomModel"/>
+		
+		<!-- mailing -->
+		<typeAlias type="com.my.mailing.MailingModel" alias="mailingModel"/>
+		
+	</typeAliases>
+
+	<!-- SQL 정의한 xml문서 Mapping -->
+	<mappers>
+	 <mapper resource="/mybatis/config/goodsSQL.xml" /> 
+		<mapper resource="mybatis/config/memberSQL.xml" />
+	 <mapper resource="mybatis/config/basketSQL.xml" /> 
+       <mapper resource="mybatis/config/orderSQL.xml" /> 
+      <mapper resource="mybatis/config/onedaySQL.xml" />
+      <mapper resource="mybatis/config/customSql.xml"/>
+	<mapper resource="mybatis/config/cuboardSql.xml"/>
+			<mapper resource="mybatis/config/noticeSQL.xml" />
+		<mapper resource="mybatis/config/qnaSQL.xml"/>
+		<mapper resource="mybatis/config/mailingSQL.xml"/>
+	</mappers>
+
+</configuration>

@@ -1,0 +1,181 @@
+@charset "utf-8";
+
+/* commnon
+-------------------------------------------------------------- */
+.sub_tit{padding:10px 0 20px;font-size:18px;margin-top:10px;font-family:'나눔 고딕 볼드',Nanum Gothic-Bold,'맑은 고딕',Malgun Gothic,sans-serif;font-weight:800;}
+.summary{line-height:140%;margin-bottom:30px;}
+.line_p{line-height:140%;}
+
+
+/* 회원가입 */
+.sign_grp .step{margin-bottom:50px;}
+.sign_grp .step ul:after{display:block;content:"";clear:both;}
+.sign_grp .step ul li{position:relative;top:0;left:0;float:left;width:33.33%;height:45px;line-height:45px;text-align:center;background:#ddd;font-size:15px;font-family:'나눔 고딕 볼드',Nanum Gothic-Bold,'맑은 고딕',Malgun Gothic,sans-serif;font-weight:800;}
+.sign_grp .step ul li:after{position:absolute;top:0;right:0;display:block;content:"";width:1px;height:45px;background:#fff;}
+.sign_grp .step ul li.on{background:#000000;color:#fff;}
+
+.sign_grp .sign_box .titt{}
+.sign_grp .sign_box .tit{height:40px;line-height:40px;background:#f8f8f8;padding:0 10px;font-size:14px;font-family:'나눔 고딕 볼드',Nanum Gothic-Bold,'맑은 고딕',Malgun Gothic,sans-serif;font-weight:800;}
+.sign_grp .sign_box .tit span{display:inline-block;margin-right:10px;}
+.sign_grp .sign_box .tit span img{margin-top:-5px;}
+
+.sign_grp .sign_box .step_01{}
+.sign_grp .sign_box .step_01 .inner{margin-top:20px;}
+.sign_grp .sign_box .step_01 .inner > p{font-size:15px;margin-bottom:10px;font-family:'나눔 고딕 볼드',Nanum Gothic-Bold,'맑은 고딕',Malgun Gothic,sans-serif;font-weight:800;}
+.sign_grp .sign_box .step_01 .inner .scroll_box{height:80px;overflow-y:scroll;border:1px solid #ccc;padding:10px;}
+.sign_grp .sign_box .step_01 .inner .scroll_box p{font-size:12px;}
+.sign_grp .sign_box .step_01 .inner .chk{margin-top:10px;text-align:right;}
+
+.sign_grp .sign_box .step_02{margin-top:10px;margin-right:auto;margin-left:auto;}
+.sign_grp .sign_box .step_03{margin-top:30px;padding-bottom:30px;border-bottom:1px solid #ccc;}
+.sign_grp .sign_box .step_03 p{font-size:14px;text-align:center;}
+.sign_grp .sign_box .step_03 .success{margin-bottom:15px;}
+.sign_grp .sign_box .step_03 .success strong{font-size:20px;color:#009bd7;}
+
+/* id/pw 찾기 */
+.sign_grp .idpw_grp{width:400px;margin:auto;}
+.sign_grp .id_grp{border-top:1px solid #252525;border-bottom:1px solid #f0f0f0}
+
+
+/* table
+/* -------------------------------------------------------------- */
+table .ibk{display:inline-block;margin-left:10px;}
+table .bk{display:block;margin-top:5px;}
+table .contents_img img{max-width:100%;}
+
+.tbl_type_01{margin-right:auto;margin-left:auto;width:30%;}
+.tbl_type_01 td{font-size: 14px; padding:8px;border-top:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;border-left:1px solid #f0f0f0;border-right:1px solid #f0f0f0;margin-right:auto;margin-left:auto;}
+.tbl_type_01 th{ font-size: 14px; width:20%;background:#f8f8f8;text-align:center;margin-right:auto;margin-left:auto;border-bottom:1px solid #f0f0f0;}
+.tbl_type_02{border-bottom:1px solid #f0f0f0;}
+.tbl_type_02 thead th{background:#f8f8f8;padding:10px;}
+.tbl_type_02 tbody td{padding:10px;border-top:1px solid #f0f0f0;text-align:center;}
+.tbl_type_02 tbody td.subject{text-align:left;}
+.tbl_type_02 tbody td.subject a{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} */
+.tbl_type_03{border-bottom:1px solid #f0f0f0;}
+.tbl_type_03 th,
+.tbl_type_03 td{padding:8px;border-top:1px solid #f0f0f0;}
+.tbl_type_03 th{background:#f8f8f8;text-align:left;}
+.tbl_type_03 td{}
+
+/* Btn
+-------------------------------------------------------------- */
+.btn_type_01{margin-top:10px;text-align:center;font-size:0;}
+.btn_type_02{margin-top:15px;text-align:center;font-size:0;}
+.btn_type_03{margin-top:20px;text-align:center;font-size:0;}
+.btn_type_04{margin-top:40px;text-align:center;font-size:0;}
+.btn_type_05{margin-top:40px;text-align:right;font-size:0;}
+.btn_type_06{margin-top:10px;text-align:right;font-size:0;}
+
+.btn{
+	display:inline-block;
+	vertical-align:middle;
+	text-align:center;
+	overflow:visible;
+}
+.btn input, .btn span{
+	display:block;
+	overflow:visible;
+	border:0;
+	cursor:pointer;
+	font-size:14px;
+	color:#fff;
+	-webkit-border-radius:3px;
+		-moz-border-radius:3px;
+			  border-radius:3px;
+	-webkit-text-shadow:0 1px 1px rgba(0, 0, 0, 0.6);
+		-moz-text-shadow:0 1px 1px rgba(0, 0, 0, 0.6);
+			  text-shadow:0 1px 1px rgba(0, 0, 0, 0.6);
+	/* 
+	-webkit-box-shadow:inset -1px 1px 0px 1px rgba(255,255,255,0.35);
+	   -moz-box-shadow:inset -1px 1px 0px 1px rgba(255,255,255,0.35);
+			  box-shadow:inset -1px 1px 0px 1px rgba(255,255,255,0.35); */
+}
+/* Btn Color
+-------------------------------- */
+.btn.btnC_01 input, .btn.btnC_01 span{background:#ee1c25;border:1px solid #ee1c25;} /* 로고색 */
+.btn.btnC_02 input, .btn.btnC_02 span{background:#fff;border:1px solid #efebdb;} /* 베이지색선 */
+.btn.btnC_03 input, .btn.btnC_03 span{background:#9b9c9c;border:1px solid #919191;} /* 연회색 -기본 */
+.btn.btnC_04 input, .btn.btnC_04 span{background:#009bd7;border:1px solid #009bd7;} /* 파랑 */
+.btn.btnC_05 input, .btn.btnC_05 span{background:#2a2e33;border:1px solid #2a2e33;} /* 검정 */
+
+/* Btn all
+-------------------------------- */
+.btn.btnA_01,
+.btn.btnA_02{width:100%;}
+.btn.btnA_01 input, .btn.btnA_01 span{
+	width:100%;
+	height:60px;
+	line-height:58px;
+	font-size:16px;
+}
+.btn.btnA_02 input, .btn.btnA_02 span{
+	width:100%;
+	height:30px;
+	line-height:28px;
+	font-size:14px;
+	text-shadow:none;
+	color:#666;
+}
+
+/* Btn padding Type
+-------------------------------- */
+.btn.btnP_01 input, .btn.btnP_01 span{
+	height:30px;
+	line-height:28px;
+	padding:0 10px;
+	text-shadow:none;
+	color:#666;
+}
+.btn.btnP_02 input, .btn.btnP_02 span{
+	height:25px;
+	line-height:23px;
+	border:1px solid #ccc;
+	padding:0 5px;
+	color:#666;
+	background:#fff;
+	text-shadow:none;
+}
+.btn.btnP_03 input, .btn.btnP_03 span{
+	height:29px;
+	line-height:27px;
+	padding:0 5px;
+	text-shadow:none;
+	font-size:12px;
+}
+.btn.btnP_04 input, .btn.btnP_04 span{
+	height:29px;
+	line-height:27px;
+	padding:0 10px;
+	text-shadow:none;
+}
+
+/* Btn fix Type
+-------------------------------- */
+.btn.btnF_01 input, .btn.btnF_01 span{
+	width:130px;
+	height:38px;
+	line-height:36px;
+	text-shadow:none;
+	color:#666;
+}
+.btn.btnF_02 input, .btn.btnF_02 span{
+	width:100px;
+	height:40px;
+	line-height:38px;
+	font-size:16px;
+}
+.btn.btnF_03 input, .btn.btnF_03 span{
+	width:60px;
+	height:30px;
+	line-height:28px;
+	font-size:12px;
+	color:#666;
+	text-shadow:none;
+}
+.btn.btnF_04 input, .btn.btnF_04 span{
+	width:60px;
+	height:30px;
+	line-height:28px;
+	font-size:12px;
+	text-shadow:none;
+}

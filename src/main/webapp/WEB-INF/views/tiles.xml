@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">  
+ 
+<tiles-definitions>  
+  
+   <!-- user tiles -->
+   <definition name="user" template="/WEB-INF/views/user/tiles/layouts/userLayout.jsp">  
+       <put-attribute name="header" value="/WEB-INF/views/user/tiles/template/userHeader.jsp" />   
+       <put-attribute name="body" value="" />  
+       <put-attribute name="footer" value="/WEB-INF/views/user/tiles/template/userFooter.jsp" />  
+   </definition>  
+  
+   <!-- user 부분 form 참조하는 페이지로 매핑되는 애들 -->
+   <definition name="*/*" extends="user">  
+       <put-attribute name="body" value="/WEB-INF/views/user/{1}/{2}.jsp" />  
+   </definition>
+   
+	<!-- admin tiles -->
+	<definition name="admin" template="/WEB-INF/views/admin/ad_layout/admin-layout.jsp">
+	<put-attribute name="header" value="/WEB-INF/views/admin/ad_layout/header.jsp"/>
+	<put-attribute name="side" value="/WEB-INF/views/admin/ad_layout/side_menu.jsp"/>
+	<put-attribute name="footer" value="/WEB-INF/views/admin/ad_layout/footer.jsp"/>
+	</definition>
+	<!-- admin 부분 form 참조하는 페이지로 매핑되는 애들 -->
+	<definition name="admin_form/*" extends="admin">
+	<put-attribute name="body" value="/WEB-INF/views/admin/admin_form/{1}.jsp"/>
+	</definition>
+	<definition name="ad/*/*" extends="admin">
+	<put-attribute name="body" value="/WEB-INF/views/admin/{1}/{2}.jsp"/>
+	</definition>	
+
+
+</tiles-definitions>

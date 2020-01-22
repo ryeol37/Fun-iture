@@ -1,0 +1,13 @@
+.send input[id="reset"]{ /* 사용할 button 속성에 id를 넣어서 사용함. */
+	width: 14%;
+	font-size: 1.1em;
+	background:#800000;
+	padding: 0.4em 0.8em;
+	text-align: center;
+	color: #fff;
+	border: none;
+	outline:none;
+	-webkit-appearance: none;
+}
+.send input[id="reset"]:hover{ /* button에 마우스를 갖다대면 변하는 색상 */
+	background:#2d2d2d;

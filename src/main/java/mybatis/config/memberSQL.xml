@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+	<resultMap type="memberModel" id="memberRes">
+		<result property="no" column="no" />
+		<result property="id" column="id" />
+		<result property="password" column="password" />
+		<result property="name" column="name" />
+		<result property="jumin1" column="jumin1" />
+		<result property="jumin2" column="jumin2" />
+		<result property="zipcode" column="zipcode" />
+		<result property="address1" column="address1" />
+		<result property="address2" column="address2" />
+		<result property="phone" column="phone" />
+		<result property="email" column="email" />
+		<result property="point" column="point" />
+		<result property="reg_date" column="reg_date" />
+		<result property="status" column="status" />
+	</resultMap>
+	
+	<!-- 공통 select -->
+	<sql id="select_all">
+		select * from MEMBER
+	</sql>
+	
+	<select id="selectAll" parameterType="int" resultMap="memberRes">
+		<include refid="select_all" />
+	</select>
+	
+	<!-- 회원정보 입력 -->
+	<insert id="insertMember" parameterType="memberModel">
+		insert into member
+                <![CDATA[(id, password, name, jumin1, jumin2, 
+                zipcode, address1, address2, phone, email, point, reg_date, status)
+                values(
+                #{id}, #{password}, #{name}, #{jumin1}, #{jumin2}, 
+                #{zipcode}, #{address1}, #{address2}, #{phone}, #{email}, 0, now(), 'Y')]]>
+	</insert>
+	
+	<!-- 로그인 체크 -->
+	<select id="login" parameterType="memberModel" resultMap="memberRes">
+		select * from MEMBER 
+		where id = #{id} and password = #{password}
+	</select>
+	
+		<!-- 아이디중복 체크 -->
+	<select id="checkId" parameterType="String" resultType="int">
+		select count(*) from MEMBER 
+		where id = #{id} 
+	</select>
+	
+
+	<select id="getMember" parameterType="String" resultMap="memberRes">
+		<include refid="select_all" />
+		where id = #{id}
+	</select>
+	
+	<!-- 이름 + 이메일로 아이디찾기 -->
+	<select id="findId" parameterType="memberModel" resultMap="memberRes">
+		select * from MEMBER
+		where name = #{name} and email = #{email}
+	</select>
+	
+	<!-- 아이디 + 이메일로 비밀번호찾기 -->
+	<select id="findPw" parameterType="memberModel" resultMap="memberRes">
+		select * from MEMBER
+		where id = #{id} and email = #{email}
+	</select>
+	
+	<!-- 회원정보 수정 -->
+	<update id="updateMember" parameterType="memberModel">
+		update MEMBER set 
+		id = #{id},
+		password = #{password},
+		name = #{name},
+		zipcode = #{zipcode},
+		address1 = #{address1},
+		address2 = #{address2},
+		phone = #{phone},
+		email = #{email}
+		where id = #{id}
+	</update>
+	
+	<!-- 회원탈퇴 -->
+	<update id="deleteMember" parameterType="String">
+		update member set 
+		status = 'N'
+		where id = #{id}
+	</update>
+	
+	<!-- 회원정보 -->
+	<select id="memberList" resultMap="memberRes">
+		select * from MEMBER order by no desc
+	</select>
+	
+		<update id="addPoint" parameterType="memberModel">
+		update member
+		set point = #{point}
+		where id = #{id}
+	</update>
+	
+	<!-- 관리자 회원정보 수정 -->
+	<update id="adupdateMember" parameterType="memberModel">
+		update MEMBER set 
+		id = #{id},
+		password = #{password},
+		name = #{name},
+		zipcode = #{zipcode},
+		address1 = #{address1},
+		address2 = #{address2},
+		phone = #{phone},
+		email = #{email},
+		point = #{point}
+		where id = #{id}
+	</update>
+	
+		<!-- 관리자 탈퇴 -->
+	<delete id="addeleteMember" parameterType="String">
+		delete from MEMBER
+		where id = #{id}
+	</delete>
+	
+</mapper>
+	

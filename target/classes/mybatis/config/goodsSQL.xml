@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="goods">
+
+	<resultMap type="goodsModel" id="goodsRes">
+		<result property="goods_no" column="goods_no" />
+		<result property="cate_no" column="cate_no" />
+		<result property="goods_name" column="goods_name" />
+		<result property="goods_size" column="goods_size" />
+		<result property="goods_price" column="goods_price" />
+		<result property="goods_qty" column="goods_qty" />
+		<result property="main_save" column="main_save" />
+		<result property="detail_save" column="detail_save" />
+		<result property="reg_date" column="reg_date" />
+		<result property="status" column="status" />
+	</resultMap>
+	
+	<resultMap type="goodsComModel" id="goodsComRes">
+		<result property="no" column="no"/>
+		<result property="goods_no" column="goods_no"/>
+		<result property="id" column="id"/>
+		<result property="com_reg_date" column="com_reg_date"/>
+		<result property="com" column="com"/>
+		<result property="re_save" column="re_save"/>
+	</resultMap>
+	
+		<resultMap type="likesModel" id="likesRes">
+		<result property="id" column="id"/>
+		<result property="goods_no" column="goods_no"/>
+		<result property="main_save" column="main_save"/>
+		<result property="goods_name" column="goods_name"/>
+		<result property="goods_price" column="goods_price"/>
+		<result property="point" column="point"/>
+	</resultMap>
+
+	<!-- 공통으로 사용할 select 의 -->
+	
+	<!--  상품리스트Default -->
+	<select id="goodsList" resultMap="goodsRes">
+		SELECT * FROM GOODS ORDER BY goods_no ASC
+	</select>	
+	
+	<!--  카테고리별 상품리스트 -->
+	<select id="goodsCate" parameterType="String" resultMap="goodsRes">
+		SELECT * FROM GOODS WHERE cate_no = #{cate_no}
+	</select>
+	
+	 <!--  상품상세보기 -->
+	<select id="selectOne-goods" parameterType="goodsModel" resultMap="goodsRes">
+		SELECT * FROM GOODS WHERE goods_no = #{goods_no}
+	</select>
+		
+	<!-- 좋아요 입력 -->
+	<select id="insert-likes" parameterType="likesModel" resultMap="likesRes">
+	INSERT INTO LIKES (goods_no, id) values (#{goods_no}, #{id})
+	</select>
+	
+	<!-- 좋아요 갯수 불러오기 -->
+	<select id="likesCount" parameterType="likesModel" resultType="int">
+	SELECT COUNT(id) FROM LIKES WHERE goods_no = #{goods_no}
+	</select>
+	
+	<!-- 좋아요 입력 테스트 -->
+	<select id="insert-test">
+	INSERT INTO LIKES (goods_no, id)
+	SELECT g.#{goods_no}, l.#{id}
+	FROM GOODS g INNER JOIN LIKES l
+	on g.#{goods_no} = l.#{goods_no}
+	</select>
+	
+	<!-- 좋아요 중복체크 -->
+	<select id="likesCheck" parameterType="likesModel" resultMap="likesRes">
+		select id from LIKES where goods_no = #{goods_no} and id = #{id}
+	</select>
+	
+		<!-- 좋아요 중복체크 위해 데이터입력 -->
+	<insert id="insertgradecheck" parameterType="likesModel">
+		insert into LIKES (goods_no, id) values (#{goods_no}, #{id})
+	</insert>
+	
+	
+	<update id="amountDown" parameterType="goodsModel">
+		UPDATE GOODS SET goods_qty = #{goods_qty} WHERE goods_no = #{goods_no}	
+	</update>
+	
+	<!-- 코멘트 리스트 -->
+	<select id="goodsComList" resultMap="goodsComRes" parameterType="goodsComModel">
+		select * from goods_com
+				where goods_no = #{goods_no}
+			    order by no desc
+	</select>
+	
+	<!-- 코멘트 작성 -->
+ 	<insert id="goodsComWrite" parameterType="int">
+		insert into goods_com (goods_no, id, com_reg_date, com, re_save) values(#{goods_no}, #{id}, now(), #{com}, #{re_save})
+	</insert>
+	
+	<!-- 코멘트 삭제 -->
+	<delete id="goodsComDelete" parameterType="goodsComModel">
+		delete from goods_com where no=#{no} 
+	</delete>
+	
+		<!-- 좋아요 리스트 -->
+	<select id="likeList" resultMap="goodsRes" parameterType="goodsModel">
+		SELECT l.*, g.* FROM likes l,goods g WHERE l.goods_no = g.goods_no and l.id=#{id}
+	</select>
+	
+	<!-- 나의 코멘트 리스트 -->
+	<select id="mycomList" resultMap="goodsComRes" parameterType="goodsComModel">
+		SELECT c.*, g.* FROM (SELECT * FROM goods_com WHERE id=#{id}) c, goods g WHERE c.goods_no = g.goods_no
+	</select>
+
+	<select id="searchC" parameterType="goodsComModel" resultMap="goodsComRes">
+		SELECT *
+		FROM goods_com WHERE com like #{keyword}
+	</select>
+	
+	<select id="goodsBest" resultMap="goodsRes">
+	select  o.goods_no, count( o.goods_no) as cate_no,  g.main_save
+    from orders o, goods g
+    where g.goods_no =o.goods_no
+	group by  o.goods_no,  g.main_save
+	order by cate_no desc
+	</select>
+	
+		<!-- 관리자 상품 등록 -->
+	<insert id="adGoodsInsert" parameterType="goodsModel">
+	INSERT INTO goods
+(cate_no, 
+goods_name, 
+goods_size, 
+goods_price, 
+goods_qty, 
+main_save, 
+detail_save, 
+reg_date, 
+status)
+VALUES (
+#{cate_no},
+#{goods_name}, 
+#{goods_size}, 
+#{goods_price}, 
+#{goods_qty}, 
+#{main_save}, 
+#{detail_save}, 
+now(),
+'Y')
+	</insert>
+	
+	<!-- 관리자 상품 삭제 -->
+	<delete id="adGoodsDelete" parameterType="goodsModel">
+	DELETE FROM goods WHERE goods_no = #{goods_no}
+	</delete>
+	
+	<!-- 관리자 상품 수정 -->
+	<update id="adGoodsModify" parameterType="goodsModel">
+	UPDATE goods SET
+cate_no=#{cate_no},
+goods_name=#{goods_name}, 
+goods_size=#{goods_size}, 
+goods_price=#{goods_price}, 
+goods_qty=#{goods_qty}, 
+main_save=#{main_save}, 
+detail_save=#{detail_save}
+where goods_no=#{goods_no}
+	</update>
+</mapper>

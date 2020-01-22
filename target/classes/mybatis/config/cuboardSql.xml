@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cuboard">
+	
+	<resultMap type="cuboardModel" id="cuboard">
+		<result property="cub_no" column="CUB_NO" />
+		<result property="cu_no" column="CU_NO" />
+		<result property="id" column="ID" />
+		<result property="subject" column="SUBJECT" />
+		<result property="options" column="OPTIONS" />
+		<result property="content" column="CONTENT" />
+		<result property="cub_save" column="CUB_SAVE" />
+		<result property="reg_date" column="REG_DATE" />
+		<result property="price" column="PRICE" />
+		<result property="status" column="STATUS" />
+		<result property="com" column="COM" />
+		<result property="name" column="NAME" />
+		<result property="cu_detail" column="CU_DETAIL_SAVE" />
+	</resultMap>
+  	<resultMap type="cuboardComModel" id="cuboardCom">
+ 		<result property="no" column="NO" />
+		<result property="cub_no" column="CUB_NO" />
+		<result property="id" column="ID" />
+		<result property="com" column="COM" />
+		<result property="com_reg_date" column="COM_REG_DATE" />
+ 	</resultMap>
+
+	<!-- 견적문의 등록 처리 -->
+	<insert id="insertCuboard" parameterType="cuboardModel">
+		INSERT INTO CUSTOM_BOARD (
+			CUB_NO, CU_NO, ID, SUBJECT, OPTIONS, CONTENT, CUB_SAVE, REG_DATE, STATUS
+		) VALUES (
+			#{cu_no}, #{id}, #{subject}, #{options}, #{content}, #{cub_save}, now(), 'Y'
+		)
+	</insert>
+	<insert id="insertCuboardWoF" parameterType="cuboardModel">
+		INSERT INTO CUSTOM_BOARD (
+			CUB_NO, CU_NO, ID, SUBJECT, OPTIONS, CONTENT, REG_DATE, STATUS
+		) VALUES (
+			#{cu_no}, #{id}, #{subject}, #{options}, #{content}, now(), 'Y'
+		)
+	</insert>
+	
+	<!-- 견적 문의 리스트 -->
+ 	<select id="selectRowsCub" resultMap="cuboard">
+		SELECT * FROM (
+			SELECT b.CUB_NO, b.ID, b.SUBJECT, b.REG_DATE, b.PRICE, b.STATUS, count(c.COM) AS COM
+			FROM CUSTOM_BOARD b LEFT OUTER JOIN CUBOARD_COM c
+			ON b.CUB_NO = c.CUB_NO
+			GROUP BY b.CUB_NO, b.ID, b.SUBJECT, b.REG_DATE, b.PRICE, b.STATUS
+			ORDER BY CUB_NO DESC
+		)
+		b WHERE STATUS = 'Y'
+	</select>
+	
+	<!-- 견적 문의 상세보기&견적 문의 수정 폼 -->
+	<select id="selectOneCub" resultMap="cuboard" parameterType="int">
+		SELECT c.NAME, c.CU_DETAIL_SAVE, b.CUB_NO, b.CU_NO, b.ID, b.SUBJECT, b.OPTIONS, b.CONTENT, b.CUB_SAVE, b.REG_DATE, b.PRICE
+		FROM CUSTOM c, CUSTOM_BOARD b
+		WHERE c.CU_NO = b.CU_NO AND CUB_NO = #{cub_no}
+	</select>
+	
+	<!-- 견적 문의 댓글 등록 -->
+	<insert id="insertCubCom" parameterType="cuboardComModel">
+		INSERT INTO CUBOARD_COM (
+			NO, CUB_NO, ID, COM, COM_REG_DATE
+		) VALUES (
+			#{cub_no}, #{id}, #{com}, now()
+		)
+	</insert>
+	
+	<!-- 견적 문의 상세보기의 댓글 -->
+	<select id="selectRowsCubCom" resultMap="cuboardCom" parameterType="int">
+		SELECT NO, ID, COM, COM_REG_DATE FROM CUBOARD_COM
+		WHERE CUB_NO = #{cub_no}
+		ORDER BY NO ASC
+	</select>
+	
+	<!-- 견적 문의 상세보기의 댓글삭제 -->
+	<delete id="deleteCubCom" parameterType="int">
+		DELETE FROM CUBOARD_COM
+		WHERE NO = #{no}
+	</delete>
+	
+	<!-- 견적 문의 수정 처리 -->
+	<update id="modifyCuboard" parameterType="cuboardModel">
+		UPDATE CUSTOM_BOARD SET 
+		SUBJECT = #{subject}, OPTIONS = #{options}, CONTENT = #{content}, CUB_SAVE = #{cub_save}
+		WHERE CUB_NO = #{cub_no}
+	</update>
+
+	<!-- 견적 문의 삭제 처리 -->
+ 	<update id="deleteCuboard" parameterType="int">
+		UPDATE CUSTOM_BOARD SET 
+		STATUS = 'N'
+		WHERE CUB_NO = #{cub_no}
+	</update>
+	
+		<!-- 나의 주문내역으로 연결 전 custom_board table 을 업데이트(가격)  -->
+ 	<update id="updatePrice" parameterType="CustomComModel">
+		UPDATE CUSTOM_BOARD SET
+		PRICE = #{price}
+		WHERE CUB_NO = #{cub_no}
+	</update>
+	<resultMap type="orderCusModel" id="orderCus">
+		<result property="name" column="NAME" />
+		<result property="address1" column="ADDRESS1" />
+		<result property="address2" column="ADDRESS2" />
+		<result property="zipcode" column="ZIPCODE" />
+		<result property="phone" column="PHONE" />
+	</resultMap>
+	
+	<!-- order 테이블에 필요한 회원 정보 가져오기 -->
+ 	<select id="selectMem" resultMap="orderCus" parameterType="String">
+		SELECT NAME, ADDRESS1, ADDRESS2, ZIPCODE, PHONE
+		FROM MEMBER
+		WHERE ID = #{id}
+	</select>
+	
+	<!-- order 테이블에 추가하기 -->
+	<insert id="addOrders" parameterType="orderCusModel">
+		INSERT INTO ORDERS_CUS (
+		  ORDER_NO, ID, GOODS_NO, ORDER_PRICE,
+		  NAME, ADDRESS1, ADDRESS2, ZIPCODE, PHONE, OPTIONS, MEMO,
+		  STATUS_NO, SETTLE_TYPE, REG_DATE
+		) VALUES (
+		  #{id}, #{goods_no}, #{order_price},
+		  #{name}, #{address1}, #{address2}, #{zipcode}, #{phone}, #{options}, #{memo},
+		  #{status_no}, #{settle_type}, now()
+		)
+	</insert>
+	
+	<!-- 관리자용 견적문의 게시판 리스트 -->
+	<select id="selectRowsCubAd" resultMap="cuboard" parameterType="cuboardModel">
+		SELECT * FROM (
+			SELECT b.CUB_NO, b.CU_NO, c.NAME, b.ID, b.SUBJECT, COUNT(d.COM) as COM, b.PRICE, b.REG_DATE, b.STATUS
+			FROM CUSTOM_BOARD b LEFT OUTER JOIN CUSTOM c
+			ON b.CU_NO = c.CU_NO
+			LEFT OUTER JOIN CUBOARD_COM d
+			ON b.CUB_NO = d.CUB_NO
+			GROUP BY b.CUB_NO, b.CU_NO, c.NAME, b.ID, b.SUBJECT, b.PRICE, b.REG_DATE, b.STATUS
+			ORDER BY b.CUB_NO DESC
+		)
+		WHERE STATUS='Y'
+		<if test="searchCate!='status' and searchCate!=null">
+			AND ${searchCate} LIKE '%'||#{keyword}||'%'
+		</if>
+ 		<if test="searchCate=='status'">
+			<if test="keyword=='견적완료'">
+				AND PRICE>=0
+			</if>
+			<if test="keyword=='협의중'">
+				AND COM>0 AND PRICE IS NULL
+			</if>
+			<if test="keyword=='미답변'">
+				AND COM=0
+			</if>
+		</if>
+	</select>
+	
+	<!-- 각각 검색 -->
+	<select id="searchS" resultMap="cuboard">
+		SELECT *
+		FROM custom_board WHERE subject like #{keyword} and status='Y' Order by cub_no DESC
+	</select>
+	<select id="searchC" resultMap="cuboard">
+		SELECT *
+		FROM custom_board WHERE content like #{keyword} and status='Y' Order by cub_no DESC
+	</select>
+	
+		<select id="cubList" resultMap="cuboard">
+		select cub_no, cu_no, id, subject, reg_date
+		from custom_board
+		where id=#{id} and status='Y'
+
+	</select>
+	
+</mapper>	

@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="order">
+
+
+	<resultMap type="orderModel" id="orderRes">
+		<result property="order_no" column="order_no" />
+		<result property="id" column="id" />
+		<result property="goods_no" column="goods_no" />
+		<result property="order_qty" column="order_qty" />
+		<result property="order_price" column="order_price" />
+		<result property="name" column="name" />
+		<result property="address1" column="address1" />
+		<result property="address2" column="address2" />
+		<result property="zipcode" column="zipcode" />
+		<result property="phone" column="phone" />
+		<result property="memo" column="memo" />
+		<result property="status_no" column="status_no" />
+		<result property="settle_type" column="settle_type" />
+		<result property="reg_date" column="reg_date" />
+		<result property="order_bank" column="order_bank" />
+		<result property="use_point" column="use_point" />
+		<result property="status" column="status" />
+
+		<!-- 제작,원데이 주문 추가부분 -->
+		<result property="cu_no" column="cu_no" />
+		<result property="cu_main_save" column="cu_main_save" />
+		<result property="options" column="options" />
+		<result property="oneday_no" column="oneday_no" />
+		<result property="price" column="price" />
+		<result property="name_1" column="name_1" />
+	</resultMap>
+
+	<insert id="insertOrder" parameterType="orderModel">
+		insert into orders 
+<![CDATA[(id, goods_no, order_qty, order_price, name, address1, address2, zipcode, phone, memo, status_no, settle_type, reg_date, order_bank, use_point)
+         values(#{id}, #{goods_no}, #{order_qty}, #{order_price}, 
+               #{name}, #{address1}, #{address2}, #{zipcode}, #{phone}, #{memo}, #{status_no}, #{settle_type}, now(), #{order_bank}, #{use_point}) ]]>
+	</insert>
+
+
+	<select id="orderList" resultMap="orderRes" parameterType="orderModel">
+		select *
+		from orders
+		where id = #{id}
+		order by order_no desc
+	</select>
+
+
+	<delete id="deleteOrder" parameterType="orderModel">
+		delete from orders where
+		order_no = #{order_no}
+	</delete>
+
+	<select id="orderGetOne" resultMap="orderRes" parameterType="orderModel">
+		select o.*, s.status
+		from orders o, order_status s
+		where order_no =
+		#{order_no} and o.status_no=s.status_no
+	</select>
+
+	<select id="customGetOne" resultMap="orderRes" parameterType="orderModel">
+		select o.*, s.status
+		from orders_cus o, order_status s
+		where order_no =
+		#{order_no} and o.status_no=s.status_no
+	</select>
+
+	<select id="onedayGetOne" resultMap="orderRes" parameterType="orderModel">
+		select o.*, s.status
+		from orders_one o, order_status s
+		where order_no =
+		#{order_no} and o.status_no=s.status_no
+	</select>
+
+	<update id="orderModify" parameterType="orderModel">
+		UPDATE orders
+		SET
+		name = #{name},
+		phone = #{phone},
+		zipcode = #{zipcode},
+		address1 = #{address1},
+		address2 = #{address2},
+		memo = #{memo},
+		status_no = #{status_no}
+		WHERE
+		order_no = #{order_no}
+	</update>
+
+	<select id="myorderList" resultMap="orderRes" parameterType="orderModel">
+		SELECT o.ORDER_NO, o.ID, o.GOODS_NO, o.ORDER_QTY, o.ORDER_PRICE,
+		o.NAME, o.ADDRESS1, o.ADDRESS2, o.ZIPCODE, o.PHONE, o.MEMO,
+		o.status_no, o.SETTLE_TYPE, o.REG_DATE, g.goods_no, g.GOODS_NAME,
+		g.GOODS_SIZE, g.MAIN_SAVE, s.status_no, s.status
+		FROM (SELECT * FROM
+		ORDERS WHERE ID = #{ID})
+		o left join goods g on o.goods_no =
+		g.goods_no, order_status s
+		WHERE o.status_no = s.status_no and
+		o.status_no between 1 and 5
+	</select>
+
+	<select id="statusCount" resultType="Integer" parameterType="orderModel">
+		SELECT count(*)
+		FROM orders
+		WHERE status_no=#{status_no} and id=#{id}
+	</select>
+
+	<select id="creList" resultMap="orderRes" parameterType="orderModel">
+		SELECT
+		o.order_no, o.id, o.GOODS_NO, o.ORDER_QTY, o.ORDER_PRICE,
+		o.NAME,
+		o.ADDRESS1, o.ADDRESS2, o.ZIPCODE, o.PHONE, o.MEMO,
+		o.status_no,
+		o.SETTLE_TYPE, o.REG_DATE, g.goods_no, g.GOODS_NAME,
+		g.GOODS_SIZE,
+		g.MAIN_SAVE, s.status_no, s.status
+		FROM (SELECT * FROM ORDERS WHERE id
+		= #{id})
+		o left join goods g on o.goods_no = g.goods_no, order_status s
+		WHERE o.status_no = s.status_no and o.status_no between 6 and 11
+	</select>
+
+	<select id="searchDate" resultMap="orderRes" parameterType="orderModel">
+		SELECT * FROM orders WHERE reg_date between start_date=#{start_date}
+		and end_date=#{end_date} ORDER BY order_no
+	</select>
+
+	<select id="adOrderList" resultMap="orderRes" parameterType="orderModel">
+
+		select o.order_no, o.id, g.goods_name, o.order_qty, o.order_price,
+		s.status, o.use_point
+		from goods g, orders o, order_status s
+		where
+		g.goods_no=o.goods_no and o.status_no=s.status_no
+
+	</select>
+
+	<select id="adCustomList" resultMap="orderRes" parameterType="orderModel">
+
+		select o.order_no, o.id, c.name as goods_name, o.order_price,
+		o.options, s.status
+		from custom c, orders_cus o, order_status s
+		where
+		c.cu_no=o.goods_no and o.status_no=s.status_no
+
+	</select>
+
+
+	<select id="adOnedayList" resultMap="orderRes" parameterType="orderModel">
+
+		select o.order_no, o.id, g.name as goods_name, o.goods_qty as
+		order_qty, o.goods_price as order_price, s.status
+		from oneday g,
+		orders_one o, order_status s
+		where g.oneday_no=o.order_no and
+		o.status_no=s.status_no
+	</select>
+
+
+	<update id="customOrderModify" parameterType="orderModel">
+		UPDATE orders_cus
+		SET
+		name = #{name},
+		phone = #{phone},
+		zipcode = #{zipcode},
+		address1 =
+		#{address1},
+		address2 = #{address2},
+		memo = #{memo},
+		status_no =
+		#{status_no}
+		WHERE
+		order_no = #{order_no}
+	</update>
+
+	<update id="oendayOrderModify" parameterType="orderModel">
+		UPDATE orders_one
+		SET
+		name = #{name},
+		phone = #{phone},
+		status_no = #{status_no}
+		WHERE
+		order_no = #{order_no}
+	</update>
+
+	<!-- 주문취소 -->
+	<update id="orderCancel" parameterType="orderModel">
+		UPDATE orders
+		SET
+		status_no = 8
+		WHERE order_no = #{order_no} and id = #{id}
+	</update>
+	<!-- 교환/반품 철회 -->
+	<update id="reCancel" parameterType="orderModel">
+		UPDATE orders
+		SET status_no =
+		4
+		WHERE order_no = #{order_no} and id = #{id}
+	</update>
+	<!-- 환불요청 -->
+	<update id="refound" parameterType="orderModel">
+		UPDATE orders
+		SET status_no =
+		6
+		WHERE order_no = #{order_no} and id = #{id}
+	</update>
+	<!-- 교환요청 -->
+	<update id="exchange" parameterType="orderModel">
+		UPDATE orders
+		SET status_no =
+		10
+		WHERE order_no = #{order_no} and id = #{id}
+	</update>
+
+	<delete id="oneCancel" parameterType="orderModel">
+		DELETE FROM orders_one WHERE oneday_no = #{oneday_no}
+	</delete>
+ 
+	<!-- 입금 대기 중 -->
+
+	<select id="st1" resultMap="orderRes" parameterType="orderModel">
+		SELECT
+		o.ORDER_NO, o.ID, o.GOODS_NO, o.ORDER_QTY, o.ORDER_PRICE,
+		o.NAME,
+		o.ADDRESS1, o.ADDRESS2, o.ZIPCODE, o.PHONE, o.MEMO,
+		o.status_no,
+		o.SETTLE_TYPE, o.REG_DATE, g.goods_no, g.GOODS_NAME,
+		g.GOODS_SIZE,
+		g.MAIN_SAVE, s.status_no, s.status
+		FROM (SELECT * FROM
+		ORDERS WHERE ID =
+		#{ID})
+		o left join goods g on o.goods_no =
+		g.goods_no, order_status s
+		WHERE o.status_no = s.status_no and
+		o.status_no = 1
+	</select>
+
+	<select id="st2" resultMap="orderRes" parameterType="orderModel">
+		SELECT
+		o.ORDER_NO, o.ID, o.GOODS_NO, o.ORDER_QTY, o.ORDER_PRICE,
+		o.NAME,
+		o.ADDRESS1, o.ADDRESS2, o.ZIPCODE, o.PHONE, o.MEMO,
+		o.status_no,
+		o.SETTLE_TYPE, o.REG_DATE, g.goods_no, g.GOODS_NAME,
+		g.GOODS_SIZE,
+		g.MAIN_SAVE, s.status_no, s.status
+		FROM (SELECT * FROM
+		ORDERS WHERE ID =
+		#{ID})
+		o left join goods g on o.goods_no =
+		g.goods_no, order_status s
+		WHERE o.status_no = s.status_no and
+		o.status_no = 2
+	</select>
+
+	<select id="st3" resultMap="orderRes" parameterType="orderModel">
+		SELECT
+		o.ORDER_NO, o.ID, o.GOODS_NO, o.ORDER_QTY, o.ORDER_PRICE,
+		o.NAME,
+		o.ADDRESS1, o.ADDRESS2, o.ZIPCODE, o.PHONE, o.MEMO,
+		o.status_no,
+		o.SETTLE_TYPE, o.REG_DATE, g.goods_no, g.GOODS_NAME,
+		g.GOODS_SIZE,
+		g.MAIN_SAVE, s.status_no, s.status
+		FROM (SELECT * FROM
+		ORDERS WHERE ID =
+		#{ID})
+		o left join goods g on o.goods_no =
+		g.goods_no, order_status s
+		WHERE o.status_no = s.status_no and
+		o.status_no = 3
+	</select>
+	<select id="st4" resultMap="orderRes" parameterType="orderModel">
+		SELECT
+		o.ORDER_NO, o.ID, o.GOODS_NO, o.ORDER_QTY, o.ORDER_PRICE,
+		o.NAME,
+		o.ADDRESS1, o.ADDRESS2, o.ZIPCODE, o.PHONE, o.MEMO,
+		o.status_no,
+		o.SETTLE_TYPE, o.REG_DATE, g.goods_no, g.GOODS_NAME,
+		g.GOODS_SIZE,
+		g.MAIN_SAVE, s.status_no, s.status
+		FROM (SELECT * FROM
+		ORDERS WHERE ID =
+		#{ID})
+		o left join goods g on o.goods_no =
+		g.goods_no, order_status s
+		WHERE o.status_no = s.status_no and
+		o.status_no = 4
+	</select>
+	<select id="st8" resultMap="orderRes" parameterType="orderModel">
+		SELECT
+		o.ORDER_NO, o.ID, o.GOODS_NO, o.ORDER_QTY, o.ORDER_PRICE,
+		o.NAME,
+		o.ADDRESS1, o.ADDRESS2, o.ZIPCODE, o.PHONE, o.MEMO,
+		o.status_no,
+		o.SETTLE_TYPE, o.REG_DATE, g.goods_no, g.GOODS_NAME,
+		g.GOODS_SIZE,
+		g.MAIN_SAVE, s.status_no, s.status
+		FROM (SELECT * FROM
+		ORDERS WHERE ID =
+		#{ID})
+		o left join goods g on o.goods_no =
+		g.goods_no, order_status s
+		WHERE o.status_no = s.status_no and
+		o.status_no = 8
+	</select>
+	<select id="st10" resultMap="orderRes" parameterType="orderModel">
+		SELECT
+		o.ORDER_NO, o.ID, o.GOODS_NO, o.ORDER_QTY, o.ORDER_PRICE,
+		o.NAME,
+		o.ADDRESS1, o.ADDRESS2, o.ZIPCODE, o.PHONE, o.MEMO,
+		o.status_no,
+		o.SETTLE_TYPE, o.REG_DATE, g.goods_no, g.GOODS_NAME,
+		g.GOODS_SIZE,
+		g.MAIN_SAVE, s.status_no, s.status
+		FROM (SELECT * FROM
+		ORDERS WHERE ID =
+		#{ID})
+		o left join goods g on o.goods_no =
+		g.goods_no, order_status s
+		WHERE o.status_no = s.status_no and
+		o.status_no = 10
+	</select>
+	<select id="st6" resultMap="orderRes" parameterType="orderModel">
+		SELECT
+		o.ORDER_NO, o.ID, o.GOODS_NO, o.ORDER_QTY, o.ORDER_PRICE,
+		o.NAME,
+		o.ADDRESS1, o.ADDRESS2, o.ZIPCODE, o.PHONE, o.MEMO,
+		o.status_no,
+		o.SETTLE_TYPE, o.REG_DATE, g.goods_no, g.GOODS_NAME,
+		g.GOODS_SIZE,
+		g.MAIN_SAVE, s.status_no, s.status
+		FROM (SELECT * FROM
+		ORDERS WHERE ID =
+		#{ID})
+		o left join goods g on o.goods_no =
+		g.goods_no, order_status s
+		WHERE o.status_no = s.status_no and
+		o.status_no = 6
+	</select>
+
+	<select id="myorderCus" resultMap="orderRes" parameterType="orderModel">
+		SELECT o.order_no, o.id, o.goods_no, o.order_price, o.status_no,
+		o.settle_type, o.reg_date, o.options, s.status, c.cu_no, c.name,
+		c.cu_main_save
+		FROM orders_cus o, order_status s, (select * from custom
+		where status='Y') c
+		WHERE o.goods_no = c.cu_no and o.status_no =
+		s.status_no and id=#{id}
+	</select>
+
+	<select id="myorderOne" resultMap="orderRes" parameterType="orderModel">
+		select o.order_no, o.oneday_no, o.reg_date, o.status_no, o.name, y.name name_1,
+		y.day, y.main_save, s.status, y.price
+		from (select * from orders_one
+		where id=#{id}) o, oneday y, order_status s
+		where o.oneday_no =
+		y.oneday_no and o.status_no = s.status_no
+	</select>
+
+
+</mapper>

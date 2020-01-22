@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="custom">
+
+	<resultMap type="customModel" id="custom">
+		<result property="cu_no" column="CU_NO" />
+		<result property="cate_no" column="CATE_NO" />
+		<result property="options" column="OPTIONS" />
+		<result property="reg_date" column="REG_DATE" />
+		<result property="name" column="NAME" />
+		<result property="cu_main" column="CU_MAIN" />
+		<result property="cu_detail" column="CU_DETAIL" />
+		<result property="review" column="REVIEW"/>
+		<result property="reply" column="REPLY"/>
+	</resultMap>
+  	<resultMap type="customComModel" id="customCom">
+ 		<result property="no" column="NO" />
+		<result property="cu_no" column="CU_NO" />
+		<result property="id" column="ID" />
+		<result property="subject" column="SUBJECT" />
+		<result property="com" column="COM" />
+		<result property="com_reg_date" column="COM_REG_DATE" />
+		<result property="re_save" column="RE_SAVE" />
+		<result property="reply" column="REPLY" />
+		<result property="re_reg_date" column="RE_REG_DATE" />
+ 	</resultMap>
+
+	<!-- 주문제작 상품 등록 -->
+	<insert id="insertCustom" parameterType="customModel">
+		INSERT INTO CUSTOM (
+			CU_NO, CATE_NO, NAME, OPTIONS, REG_DATE, CU_MAIN_SAVE, CU_DETAIL_SAVE, STATUS
+		) VALUES (
+			COMMON_NO_SEQ.NEXTVAL, #{cate_no}, #{name}, #{options}, SYSDATE, #{cu_main_save}, #{cu_detail_save}, 'Y'
+		)
+	</insert>
+	<!-- 주문제작 상품 리스트(관리자) -->
+	<select id="selectRowsCusAd" resultMap="custom">
+		SELECT * FROM(
+			SELECT c.CU_NO, c.NAME, c.OPTIONS, c.REG_DATE, c.STATUS, count(m.NO) AS REVIEW, count(m.REPLY) AS REPLY
+			FROM CUSTOM c LEFT OUTER JOIN CUSTOM_COM m
+			ON c.CU_NO = m.CU_NO
+			GROUP BY c.CU_NO, c.NAME, c.OPTIONS, c.REG_DATE, c.STATUS
+			ORDER BY c.CU_NO DESC
+		)
+		WHERE STATUS='Y'
+	</select>
+	
+	<!-- 주문제작 상품 리스트(회원) -->
+	<select id="selectRowsCusMem" resultMap="custom">
+		SELECT CU_NO, NAME, CU_MAIN_SAVE FROM CUSTOM
+		WHERE STATUS = 'Y'
+		ORDER BY CU_NO DESC
+	</select>
+	
+	<!-- 주문제작 상품 수정 폼, 주문제작 상세보기 -->
+	<select id="selectOneCus" resultMap="custom" parameterType="int">
+		SELECT * FROM CUSTOM
+		WHERE CU_NO = #{cu_no}
+	</select>
+	
+	<!-- 주문제작 상품 수정 처리 -->
+	<update id="updateCustom" parameterType="customModel">
+		UPDATE CUSTOM SET 
+		NAME = #{name}, OPTIONS = #{options}, 
+		CU_MAIN_SAVE = #{cu_main_save}, CU_DETAIL_SAVE = #{cu_detail_save}
+		WHERE CU_NO = #{cu_no}
+	</update>
+	<!-- 주문제작 상품 삭제 처리 -->
+	<delete id="deleteCustom" parameterType="int">
+		UPDATE CUSTOM SET STATUS='N'
+		WHERE CU_NO = #{cu_no}
+	</delete>
+	
+
+	<!-- 주문제작 상세보기의 상품 후기 -->
+ 	<select id="selectRowsCusCom" resultMap="customCom" parameterType="int">
+		SELECT NO, CU_NO, ID, SUBJECT, COM, COM_REG_DATE, RE_SAVE, REPLY, RE_REG_DATE FROM CUSTOM_COM
+		WHERE CU_NO = #{cu_no}
+		ORDER BY NO DESC
+	</select>
+	
+	<!-- 주문제작 리뷰 작성 -->
+	<insert id="insertCustomCom" parameterType="customComModel">
+		INSERT INTO CUSTOM_COM ( 
+		NO, CU_NO, ID, SUBJECT, COM, COM_REG_DATE
+		) VALUES (
+		CU_COM_NO_SEQ.NEXTVAL, #{cu_no}, #{id}, #{subject}, #{com}, SYSDATE
+		)
+	</insert>
+	<insert id="insertCusComFile" parameterType="customComModel">
+		INSERT INTO CUSTOM_COM ( 
+		NO, CU_NO, ID, SUBJECT, COM, COM_REG_DATE, RE_SAVE
+		) VALUES (
+		CU_COM_NO_SEQ.NEXTVAL, #{cu_no}, #{id}, #{subject}, #{com}, SYSDATE, #{re_save}
+		)
+	</insert>
+	
+	<!-- 주문제작 리뷰 삭제 처리 -->
+ 	<delete id="deleteCusCom" parameterType="int">
+		DELETE FROM CUSTOM_COM
+		WHERE NO = #{no}
+	</delete>
+	
+		<!-- 주문제작 리뷰 댓글 작성 -->
+ 	<update id="registComRe" parameterType="customComModel">
+		UPDATE CUSTOM_COM SET 
+		REPLY = #{reply}, RE_REG_DATE = SYSDATE
+		WHERE NO = #{no}
+	</update>
+		
+	<!-- 주문제작 리뷰 수정 폼, 리뷰 삭제 -->
+ 	<select id="selectOneCom" resultMap="customCom" parameterType="int">
+		SELECT * FROM CUSTOM_COM
+		WHERE NO = #{no}
+	</select>
+	
+	<!-- 주문제작 리뷰 댓글 삭제 -->
+	<update id="deleteComRe" parameterType="int">
+		UPDATE CUSTOM_COM SET 
+		REPLY = null, RE_REG_DATE = null
+		WHERE NO = #{no}
+	</update>
+
+	<!-- 주문제작 리뷰 수정 처리 -->
+	<update id="updateCusCom" parameterType="customComModel">
+		UPDATE CUSTOM_COM SET 
+		SUBJECT = #{subject}, COM = #{com}, RE_SAVE = #{re_save}
+		WHERE NO = #{no}
+	</update>
+	<!-- 주문제작 리뷰 수정 처리(파일없는거) -->
+	<update id="updateCusComWof" parameterType="customComModel">
+		UPDATE CUSTOM_COM SET 
+		SUBJECT = #{subject}, COM = #{com}
+		WHERE NO = #{no}
+	</update>
+
+	
+</mapper>	

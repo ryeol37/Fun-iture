@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<context:component-scan base-package="com"></context:component-scan>
+   <!-- DispatcherServlet Context: defines this servlet's request-processing 
+      infrastructure -->
+
+   <!-- Enables the Spring MVC @Controller programming model -->
+   <mvc:annotation-driven/>
+   <mvc:default-servlet-handler/>
+
+   <!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+      up static resources in the ${webappRoot}/resources directory -->
+   <mvc:resources mapping="/resources/**" location="/resources/" />
+
+<!-- Tiles 설정 -->
+
+   <bean id="tilesViewResolver"
+      class="org.springframework.web.servlet.view.tiles3.TilesViewResolver">
+      <property name="order" value="1" />
+   </bean>
+   <bean id="tilesConfigurer"
+      class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+      <property name="definitions">
+         <list>
+            <value>/WEB-INF/views/tiles.xml</value>
+         </list>
+      </property>
+   </bean>
+   
+      <bean
+      class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+      id="multipartResolver">
+      <property value="2000000000" name="maxUploadSize" />
+
+   </bean>  
+   
+   <bean
+      class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name="prefix" value="/WEB-INF/views/user/popup/" />
+      <property name="suffix" value=".jsp" />
+   </bean>
+   
+	<!-- 에러메시지 messageSource -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages.memberMessage_ko</value>
+			</list>
+		</property>
+	</bean>
+   
+      <!-- AOP -->
+	 <bean id="profiler" class="com.my.aop.Profiler"/>
+	<aop:config>
+		<aop:aspect id="traceAspect" ref="profiler">
+			<aop:pointcut id="ctrl" expression="execution(public * com.my.*.*Controller.*(..))"/>
+			<aop:around pointcut-ref="ctrl" method="processTime"/>
+		</aop:aspect>
+	</aop:config> 
+	
+</beans>

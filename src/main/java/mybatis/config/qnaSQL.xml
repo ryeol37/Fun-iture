@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="qna">
+<!-- resultMap의 id는 쿼리문에서 쓰는 resultMap의 이름이다. -->
+	<resultMap type="qnaModel" id="qnaModel">
+		<result property="qna_no" column ="qna_no"/>
+		<result property="id" column="id" />
+		<result property="subject" column="subject" />
+		<result property="content" column="content" />
+		<result property="reg_date" column="reg_date" />
+		<result property="status" column="status" />
+		<result property="category" column="category"/>
+		<result property="count_q" column="count_q"/>
+	</resultMap>
+	
+	<!-- comment -->
+	<resultMap type="qnacomModel" id="qnacom">
+		<result property="no" column="no"/>
+		<result property="qna_no" column="qna_no"/>
+		<result property="id" column="id"/>
+		<result property="com" column="com"/>
+		<result property="com_reg_date" column="com_reg_date"/>
+	</resultMap>
+	
+	<!-- 관리자 글 목록 -->
+	<select id="adqnaList" resultMap="qnaModel">
+	select a.*,b.* from qna a left outer join 
+	(select qna_no, count(*) as count_q from qna_com group by qna_no ) b on a.qna_no = b.qna_no order by a.qna_no DESC
+	</select>
+	<!-- select qna_no, count(*) as count_q from qna_com group by qna_no : 댓글 테이블의 게시글번호로 댓글 수 가져오기.-->
+	<!-- select a.*,b.* from qna a left outer join b on a.qna_no = b.qna_no : 게시글 번호로  QNA게시판과 QNA댓글 게시판 JOIN 하기. -->
+	
+	<insert id="insert" parameterType="qnaModel">
+		INSERT INTO QNA(id, subject, content, category, reg_date, status) 
+		VALUES (#{id}, #{subject}, #{content}, #{category}, now(),'Y')
+	</insert>
+	
+	<select id="view" resultMap="qnaModel">
+		SELECT * FROM QNA WHERE qna_no = #{qna_no} 
+	</select>
+	
+	<update id="modify" parameterType="qnaModel">
+		UPDATE QNA SET subject = #{subject}, content = #{content}, category = #{category} WHERE qna_no =  #{qna_no}
+	</update>
+	
+	<update id="delete" parameterType="qnaModel">
+		UPDATE QNA SET status ='N' WHERE qna_no =#{qna_no}
+	</update>
+	
+	<!-- 회원 글 목록 -->
+	<select id="qnaList" resultMap="qnaModel">
+	select a.*,b.* from qna a left outer join 
+	(select qna_no, count(*) as count_q from qna_com group by qna_no ) b on a.qna_no = b.qna_no WHERE status='Y' ORDER BY a.qna_no DESC
+	</select>
+	
+	<!-- 코멘트 목록 -->
+	<select id="commentList" resultMap="qnacom">
+		SELECT * FROM QNA_COM WHERE QNA_NO = #{qna_no} ORDER BY no ASC
+	</select>
+	
+	<!-- 코멘트  상세보기 -->
+	<select id="commentView" resultMap="qnacom">
+		SELECT * FROM QNA_COM WHERE no = #{no}
+	</select>
+	
+	<!-- parameterType은 model class를 찾음. -->
+	<!-- 코멘트 등록 -->
+	<insert id="commentInsert" parameterType="qnacomModel">
+		INSERT INTO QNA_COM(no, qna_no, id, com, com_reg_date)
+		VALUES(QNA_COM_NO_SEQ.NEXTVAL, #{qna_no}, #{id}, #{com}, SYSDATE)
+	</insert>
+	
+	<!-- 코멘트 수정 -->
+	<update id="commentUpdate" parameterType="qnacomModel">
+		UPDATE QNA_COM SET com = #{com} WHERE no = #{no}
+	</update>
+	
+	<!-- 코멘트 삭제 -->
+	<delete id="commentDelete" parameterType="int">
+		DELETE QNA_COM WHERE no = #{no}
+	</delete>
+	
+		<select id="myqnaList" resultMap="qnaModel" parameterType="qnaModel">
+		SELECT *
+		FROM qna
+		WHERE id=#{id} and status='Y'
+		ORDER BY qna_no DESC
+	</select>
+ 
+	<select id="searchS" parameterType="String" resultMap="qnaModel">
+		SELECT *
+		FROM qna WHERE subject like #{keyword} and status='Y' Order by qna_no DESC
+	</select>
+
+	<select id="searchC" parameterType="String" resultMap="qnaModel">
+		SELECT *
+		FROM qna WHERE content like #{keyword} and status='Y' Order by qna_no DESC
+	</select>
+	
+</mapper>

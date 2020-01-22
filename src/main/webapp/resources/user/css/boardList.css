@@ -1,0 +1,227 @@
+/*--A Design by W3layouts 
+Author: W3layout
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+--*/
+select {
+	height: 24px;
+	border: 1px solid #d5d5d5;
+}
+
+option {
+	font-weight: normal;
+	display: block;
+	white-space: pre;
+	min-height: 1.2em;
+	padding: 0px 2px 1px;
+}
+
+th, td {
+	border: 0;
+	vertical-align: middle;
+	text-align: center;
+	padding: 10px 0px 10px 0px;
+}
+
+.ec-base-table th:first-child {
+	border-left: 0;
+}
+
+.ec-base-table thead th {
+	border-bottom: 1px solid #dfdfdf;
+	color: #353535;
+	background: #fcfcfc;
+	padding: 11px 0 10px;
+	vertical-align: middle;
+	font-weight: normal;
+	text-align: center;
+}
+
+.ec-base-table.typeList table {
+	border-top-color: #d7d5d5;
+	border-bottom-color: #d7d5d5;
+}
+
+.ec-base-table.typeList.gBorder tbody td {
+	border-color: #eee;
+	border-bottom-color: #d7d5d5;
+}
+
+.ec-base-table table td.message {
+	padding: 50px 0;
+}
+
+.ec-base-table .message {
+	border: 1px solid #d7d5d5;
+	padding: 50px 0;
+	text-align: center;
+	font-weight: normal;
+}
+
+p {
+	display: block;
+	-webkit-margin-before: 1em;
+	-webkit-margin-after: 1em;
+	-webkit-margin-start: 150px;
+	-webkit-margin-end: 0px;
+}
+
+.ec-base-table table {
+	border: 1px solid #d7d5d5;
+	border-top-color: #fff;
+	color: #fff;
+	position: relative;
+	line-height: 1.5;
+}
+
+table {
+	width: 80%;
+	border: 0;
+	border-spacing: 0;
+	border-collapse: collapse;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.titleArea {
+	min-height: 30px;
+	text-align: center;
+	margin: 20px 0 0;
+}
+
+.titleArea h2 {
+	display: inline-block;
+	padding: 30px 0 20px;
+	color: #2e2e2e;
+	font-size: 16px;
+}
+
+h2 {
+	display: block;
+	font-size: 1.5em;
+	-webkit-margin-before: 0.83em;
+	-webkit-margin-after: 0.83em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	font-weight: bold;
+}
+
+.xans-board-listpackage-8 .xans-board-notice-8 li,
+	.xans-board-listpackage-8 .xans-board-fixed-8 li,
+	.xans-board-listpackage-8 .xans-board-list-8 li, .ec-base-tooltip table .info,
+	.ec-base-paginate li, .ec-base-table tbody th, .ec-base-table table td.message,
+	.ec-base-table tbody td, .ec-base-table.gBorder td:first-child,
+	#myshopMain .shopMain p a {
+	color: #757575;
+}
+
+.ec-base-table.gBorder td:first-child {
+	border-left: 0;
+}
+
+.xans-myshop-boardlistsearch {
+	padding: 15px 0 20px;
+	color: #2e2e2e;
+	font-size: 12px;
+	text-align: center;
+}
+
+.ec-base-tab {
+	position: relative;
+}
+
+.ec-base-tab .menu {
+	border: 1px solid #cbcdce;
+	border-bottom-color: #202020;
+	background: #f2f2f2;
+	/* margin: 0 0 20px; */
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 10px;
+	border-left: 0;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+.ec-base-tab .menu:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+.ec-base-tab .menu li {
+	border-left: 1px solid #cbcdce;
+	background: #f2f2f2;
+	float: left;
+}
+
+.ec-base-tab .menu li a {
+	letter-spacing: 1px;
+	display: block;
+	min-width: 187px;
+	margin: 0 0 0 -1px;
+	padding: 12px 5px 11px;
+	text-decoration: none;
+	outline: 0;
+	text-align: center;
+	font-size: 11px;
+}
+
+.ec-base-tab .menu li a {
+	border-right: 1px solid #cbcdce;
+	color: #707070;
+	background: #f2f2f2;
+}
+
+.ec-base-tab .menu li.selected a {
+	border: 1px solid #202020;
+	color: #fff;
+	background: #000;
+	position: relative;
+	top: -1px;
+	left: -1px;
+	margin: 0 0 -1px;
+	border-bottom: 0;
+	font-weight: bold;
+}
+
+.ec-base-tab .menu li:first-child a {
+	margin-left: 0;
+}
+
+.ec-base-paginate li:first-child {
+	margin-left: 0;
+}
+
+.ec-base-tab .menu:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+.xans-myshop-boardhistoryhead ul {
+	margin: 10px 0 0;
+	color: #939393;
+	line-height: 1.5;
+	display: block;
+	list-style-type: disc;
+	-webkit-margin-before: 1em;
+	-webkit-margin-after: 1em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	-webkit-padding-start: 40px;
+}
+
+.page {
+	text-align: center;
+	color: #495164;
+	padding: 3px 3px 15px 10px;
+}
+
+strong {
+	font-weight: bold;
+	border-bottom: 3px solid #495164;
+}
+

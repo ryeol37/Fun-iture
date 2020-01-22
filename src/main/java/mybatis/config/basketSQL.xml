@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+      
+      
+<mapper namespace="basket">
+
+
+<resultMap type="basketModel" id="basketRes">
+		<result property="no" column="no" />
+		<result property="id" column="id" />
+		<result property="goods_no" column="goods_no" />
+		<result property="goods_qty" column="goods_qty" />
+		<result property="goods_name" column="goods_name" />
+		<result property="goods_price" column="goods_price" />
+		<result property="main_save" column="main_save" />
+</resultMap>
+
+
+	<!-- 장바구니 입력 -->
+	<select id="insertBasket" parameterType="basketModel">
+		insert into basket 
+		 			<![CDATA[(id,
+							 goods_no,
+							 goods_qty)
+					values( #{id},
+							#{goods_no},
+							#{goods_qty}) ]]>
+	</select>
+
+	<!-- 장바구니 리스트 -->
+	<select id="basketList" resultMap="basketRes" parameterType="basketModel" >
+	<![CDATA[
+		SELECT a.goods_no, a.goods_name, a.goods_size, a.goods_price, a.main_save,
+				b.no, b.id, b.goods_qty
+				FROM goods a, basket b
+					WHERE b.id = #{id} AND a.goods_no = b.goods_no
+	]]>
+	</select>
+	
+	<select id="basketOrderList" resultMap="basketRes" parameterType="basketModel">
+	<![CDATA[
+		SELECT goods_no, goods_name, goods_size, goods_price, main_save
+		FROM goods
+		WHERE goods_no=#{goods_no}
+	]]>
+	</select>
+	
+
+
+	<!-- 장바구니 하나 삭제 -->
+	<delete id="deleteBasket" parameterType="basketModel" >
+		DELETE FROM basket WHERE no=#{no}
+	</delete>
+
+
+	<!-- 장바구니 전체 삭제 -->
+	<delete id="deleteAllbasket" parameterType="basketModel" >
+		DELETE FROM basket WHERE id=#{id}
+	</delete>
+
+
+
+
+</mapper>
