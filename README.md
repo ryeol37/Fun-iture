@@ -1,7 +1,7 @@
 # Introduction
 완제품 및 커스텀오더가 가능한 가구제작 쇼핑몰입니다.
 
-전반적인 디자인과 기능들은 [MILLIENS](http://mosdesign.co.kr){: target="_blank"} 를 벤치마킹하여 제작하였습니다.
+전반적인 디자인과 기능들은 [MILLIENS](http://mosdesign.co.kr){:target="_blank"} 를 벤치마킹하여 제작하였습니다.
 
 ## 주요구현 기능
 * 관리자
