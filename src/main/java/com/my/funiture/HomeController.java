@@ -27,7 +27,9 @@ public class HomeController {
 		List<goodsModel> newList = goodsService.goodsList();
 		
 		//List<goodsModel> bestList = goodsService.goodsBest();
-		newList = newList.subList(0, 4);
+		if(newList.size() > 2){
+			newList = newList.subList(0, 4);
+		}
 //		int size = 4;
 //		if(best.size() < 4) {
 //			size = best.size();
